@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3f531683def4d2745a2da8aa17d28278
+timeCreated: 1484564086
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - shader: {fileID: 7200000, guid: a6f2bbfb96eb24a4c84798f4384aae00, type: 3}
+  - mat: {fileID: 2100000, guid: c79e207719431654a851e72c219c8258, type: 2}
+  - mesh: {fileID: 4300000, guid: 593f8ef9aec55f340ac1c159834a6626, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

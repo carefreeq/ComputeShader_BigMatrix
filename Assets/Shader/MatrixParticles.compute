@@ -1,0 +1,83 @@
+﻿#pragma kernel Init
+#pragma kernel Emit
+#pragma kernel Update
+#include "./ComputeBuffer.cginc"
+
+RWStructuredBuffer<Particle> _Particles;
+
+int _xMod, _yMod, _zMod;
+float4 _Scale;
+float4 _Pos;
+float _Time;
+float _Speed;
+float _Height;
+float4 _LocalToWorld;
+inline uint Index(uint3 id)
+{
+	return id.x + id.y * _xMod + id.z * _xMod * _yMod;
+}
+inline float Random(float2 seed)
+{
+	return frac(sin(dot(seed.xy, float2(12.9898, 78.233))) * 43758.5453);
+}
+inline float3 Random3(float3 seed)
+{
+	return float3(Random(seed.yz), Random(seed.xz), Random(seed.xy));
+}
+
+[numthreads(10, 10, 10)]
+void Init(uint3 id : SV_DispatchThreadID)
+{
+	uint index = Index(id);
+	Particle p = _Particles[index];
+	p.position = id * _Scale.xyz;
+	p.direction = float3(0, 0, 1);
+	p.scale = _Scale.xyz;
+	p.uv = p.position.xy / (float2(_xMod, _yMod)*_Scale.xy);
+	float z = p.position.z / (_zMod *_Scale.z);
+	p.color = float4(z, z, z, 1);
+	p.lifeTime = -Random(id.xy);
+	_Particles[index] = p;
+}
+
+[numthreads(10, 10, 10)]
+void Update(uint3 id : SV_DispatchThreadID)
+{
+	uint index = Index(id);
+	Particle p = _Particles[index];
+
+	if (p.lifeTime > 0 && p.lifeTime < _Time)
+	{
+		p.position = id * _Scale.xyz;
+		p.lifeTime = -Random(id.xy);
+	}
+	p.lifeTime -= _Time;
+	if (p.lifeTime < 0)
+	{
+		p.position += sin(p.lifeTime * 10)*float3(0, 0, 0.02f);
+	}
+	else
+	{
+		p.position += p.direction * _Time;
+	}
+	_Particles[index] = p;
+}
+
+[numthreads(10, 10, 10)]
+void Emit(uint3 id : SV_DispatchThreadID)
+{
+	uint index = Index(id);
+	Particle p = _Particles[index];
+	float3 pos = id * _Scale.xyz;
+	float dis = clamp((20 - distance(pos.xy, _Pos.xy)) / 20, 0, 1);
+	if (dis > 0.1)
+	{
+		dis = dis * dis * dis;
+		float rand = Random(pos.xy);
+		float z = 1 - pos.z / (_zMod *_Scale.z);
+		p.position = float3(pos.x, pos.y, pos.z + z * _Height * rand * dis);
+		p.direction = float3(0, 0, -_Height * z  *  rand * dis);
+		p.lifeTime = 1;
+	}
+	_Particles[index] = p;
+}
