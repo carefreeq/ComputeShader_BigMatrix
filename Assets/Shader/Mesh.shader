@@ -2,6 +2,7 @@
 {
 	Properties
 	{
+		_Color("Color",color)=(0.5,0.5,0.5,1)
 		_MainTex("Texture", 2D) = "white" {}
 	}
 		SubShader
@@ -14,6 +15,7 @@
 		#include"./ComputeBuffer.cginc"
 		uniform StructuredBuffer<Particle> _Particles;
 		uniform float _IdOffset;
+		uniform fixed4 _Color;
 		uniform sampler2D _MainTex;
 		uniform float4 _MainTex_ST;
 		uniform float4 _LightColor0;
@@ -74,7 +76,7 @@
 			clip(col.a - 0.2);
 
 			G_Buffer g;
-			g.diffuse = 1;
+			g.diffuse = _Color;
 			g.specSmoothness = 0;
 			g.normal = half4(i.normal * 0.5 + 0.5, 1);
 			g.emission = col;
