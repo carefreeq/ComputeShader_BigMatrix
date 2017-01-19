@@ -70,9 +70,9 @@ void Emit(uint3 id : SV_DispatchThreadID)
 	Particle p = _Particles[index];
 	float3 pos = id * _Scale.xyz;
 	float dis = clamp((20 - distance(pos.xy, _Pos.xy)) / 20, 0, 1);
+	dis = dis * dis * dis;
 	if (dis > 0.1)
 	{
-		dis = dis * dis * dis;
 		float rand = Random(pos.xy);
 		float z = 1 - pos.z / (_zMod *_Scale.z);
 		p.position = float3(pos.x, pos.y, pos.z + z * _Height * rand * dis);

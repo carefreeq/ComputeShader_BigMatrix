@@ -5,18 +5,17 @@ namespace MatrixParticle
     public class ParticlesManager : MonoBehaviour
     {
         public MatrixParticles particle;
-        public AudioSource audio;
+        public AudioSource audioSurce;
         private float[] data = new float[64];
         void Update()
         {
-            audio.GetSpectrumData(data, 0, FFTWindow.BlackmanHarris);
+            audioSurce.GetSpectrumData(data, 0, FFTWindow.BlackmanHarris);
             float max = 0;
             for (int i = 0; i < data.Length; i++)
             {
                 if (max < data[i])
                     max = data[i];
             }
-            //Debug.Log(max);
             if (max > 0.08)
             {
                 Rect rect = new Rect(Vector2.zero, new Vector2(80f, 50f));

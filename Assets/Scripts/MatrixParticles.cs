@@ -3,7 +3,9 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace MatrixParticle
 {
