@@ -64,7 +64,7 @@ namespace MatrixParticle
             }
         }
 
-        void OnRenderObject()
+        void Update()
         {
             UpdateParticles();
             DrawParticles(Camera.main);

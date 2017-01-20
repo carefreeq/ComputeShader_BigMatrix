@@ -10,18 +10,20 @@
 		Tags{ "RenderType" = "Opaque" }
 		CGINCLUDE
 		#pragma multi_compile_fog
+		#pragma target 5.0
 		#include "UnityCG.cginc"
 		#include "AutoLight.cginc"
-		#include"./ComputeBuffer.cginc"
+		#include "./ComputeBuffer.cginc"
+
 		uniform StructuredBuffer<Particle> _Particles;
 		uniform float _IdOffset;
 		uniform fixed4 _Color;
 		uniform sampler2D _MainTex;
 		uniform float4 _MainTex_ST;
 		uniform float4 _LightColor0;
-		int GetID(float2 uv)
+		inline int GetID(float2 uv)
 		{
-			return uv.x + 0.5 + _IdOffset;
+			return (int)(uv.x + 0.5 + _IdOffset);
 		}
 		ENDCG
 			Pass
@@ -32,7 +34,6 @@
 			#pragma fragment frag
 			#pragma multi_compile_shadowcaster
 			#pragma multi_compile ___ UNITY_HDR_ON
-			#pragma target 3.0
 
 			struct G_Buffer
 		{
@@ -96,7 +97,6 @@
 			Offset 1, 1
 
 			CGPROGRAM
-			#pragma target 3.0
 			#pragma vertex vert_
 			#pragma fragment frag_
 			#pragma multi_compile_shadowcaster
